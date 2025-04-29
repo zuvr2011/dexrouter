@@ -99,10 +99,8 @@
       function getTelegramUser(message) {
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
-          alert("webApp ok")
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-          alert("userId ok "+userId.toString())
-          unityInstance.SendMessage('Manager', 'GetTestHTML', userId.toString());
+          unityInstance.SendMessage("Manager", "GetTestHTML","qqq");
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
