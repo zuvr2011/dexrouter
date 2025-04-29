@@ -22,14 +22,21 @@
       </div>
     </div>
     <div id="unity-fullscreen-button" style="display: none;"></div>
+
+
+
+
+
     <script>
+
+
       const hideFullScreenButton = "1";
       const buildUrl = "Build";
       const loaderUrl = buildUrl + "/FinalBuild.loader.js";
       const config = {
-        dataUrl: buildUrl + "/FinalBuild.data.gz",
-        frameworkUrl: buildUrl + "/FinalBuild.framework.js.gz",
-        codeUrl: buildUrl + "/FinalBuild.wasm.gz",
+        dataUrl: buildUrl + "/FinalBuild.data",
+        frameworkUrl: buildUrl + "/FinalBuild.framework.js",
+        codeUrl: buildUrl + "/FinalBuild.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Maracoon",
         productName: "Pig",
@@ -72,7 +79,8 @@
           spinner.style.display = "none";
           progressBarEmpty.style.display = "";
           progressBarFull.style.width = `${100 * progress}%`;
-        }).then((unityInstance) => {
+        }).then((instance) => {
+          unityInstance = instance;
           loadingCover.style.display = "none";
           if (canFullscreen) {
             if (!hideFullScreenButton) {
@@ -87,6 +95,18 @@
         });
       };
       document.body.appendChild(script);
+
+      function getTelegramUser(message) {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          alert("webApp ok")
+          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+          alert("userId ok "+userId)
+          unityInstance.SendMessage('Manager', 'GetTestHTML', userId);
+        }else{
+          alert("Нет объекта Telegram.WebApp")
+        }
+      }
     </script>
   </body>
 </html>
