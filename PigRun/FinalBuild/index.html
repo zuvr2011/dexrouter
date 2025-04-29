@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js">
+      function getTelegramUser(message) {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+          unityInstance.SendMessage("Manager", "GetTestHTML",  userId.toString() );
+        }else{
+          alert("Нет объекта Telegram.WebApp")
+        }
+      }
+  </script>
   <head>
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
     <meta charset="utf-8">
@@ -96,15 +106,7 @@
       };
       document.body.appendChild(script);
 
-      function getTelegramUser(message) {
-        if (window.Telegram && window.Telegram.WebApp) {
-          const webApp = window.Telegram.WebApp;
-          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-          unityInstance.SendMessage("Manager", "GetTestHTML",  userId.toString() );
-        }else{
-          alert("Нет объекта Telegram.WebApp")
-        }
-      }
+      
     </script>
   </body>
 </html>
