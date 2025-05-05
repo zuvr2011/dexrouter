@@ -3,13 +3,13 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Influenser Simulator</title>
+    <title>Unity WebGL Player | Template</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
-    <body>
-    <div id="unity-container" style="position: absolute; width: 100%; height: 100%">
-      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%"></canvas>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -20,7 +20,7 @@
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
         <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">FIGHT 47</div>
+        <div id="unity-build-title">Template</div>
       </div>
     </div>
     <script>
@@ -38,7 +38,6 @@
       // way that non-critical warnings and error messages are presented to the
       // user.
       function unityShowBanner(msg, type) {
-        /*
         function updateBannerVisibility() {
           warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
         }
@@ -53,7 +52,7 @@
             updateBannerVisibility();
           }, 5000);
         }
-        updateBannerVisibility();*/
+        updateBannerVisibility();
       }
 
       var buildUrl = "Build";
@@ -64,8 +63,8 @@
         codeUrl: buildUrl + "/FinalBuild.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Maracoon",
-        productName: "President.io",
-        productVersion: "1.000",
+        productName: "Template",
+        productVersion: "1",
         showBanner: unityShowBanner,
       };
 
@@ -90,13 +89,12 @@
         // performance, uncomment the following line:
         // config.devicePixelRatio = 1;
 
-
-        unityShowBanner('Loading...');
+        unityShowBanner('WebGL builds are not supported on mobile devices.');
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
 
-        canvas.style.width = window.innerHeight;
-        canvas.style.height = window.innerHeight;
+        canvas.style.width = "960px";
+        canvas.style.height = "600px";
       }
 
       loadingBar.style.display = "block";
@@ -109,7 +107,7 @@
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
-            document.makeFullscreen('unity-container');
+            unityInstance.SetFullscreen(1);
           };
         }).catch((message) => {
           alert(message);
