@@ -120,19 +120,22 @@
               }).catch((message) => {
                 alert(message);
               });
+
+              function getTelegramUser() {
+                if (window.Telegram && window.Telegram.WebApp) {
+                  const webApp = window.Telegram.WebApp;
+                  const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+                  MyGameInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
+                }else{
+                  alert("Нет объекта Telegram.WebApp")
+                }
+              }
+              
             };
 
       document.body.appendChild(script);
 
-      function getTelegramUser() {
-        if (window.Telegram && window.Telegram.WebApp) {
-          const webApp = window.Telegram.WebApp;
-          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-          MyGameInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
-        }else{
-          alert("Нет объекта Telegram.WebApp")
-        }
-      }
+
 
     </script>
   </body>
