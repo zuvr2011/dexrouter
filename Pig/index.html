@@ -26,7 +26,7 @@
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
-
+      var MyGameInstance = null;
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
       // If type=='warning', a yellow highlight color is used.
@@ -120,22 +120,19 @@
               }).catch((message) => {
                 alert(message);
               });
-
-              function getTelegramUser() {
-                if (window.Telegram && window.Telegram.WebApp) {
-                  const webApp = window.Telegram.WebApp;
-                  const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-                  MyGameInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
-                }else{
-                  alert("Нет объекта Telegram.WebApp")
-                }
-              }
-              
             };
 
       document.body.appendChild(script);
 
-
+      function getTelegramUser() {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+          MyGameInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
+        }else{
+          alert("Нет объекта Telegram.WebApp")
+        }
+      }
 
     </script>
   </body>
