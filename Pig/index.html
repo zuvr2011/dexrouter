@@ -94,7 +94,7 @@
             });
         };
       document.body.appendChild(script);
-      
+
       function getTelegramUser() {
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
@@ -103,6 +103,15 @@
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
+      }
+
+      function copyReferalLink(str) {
+          var inp = document.createElement('input');
+          inp.value = str;
+          document.body.appendChild(inp);
+          inp.select();
+          document.execCommand('copy');
+          document.body.removeChild(inp);
       }
     </script>
 
