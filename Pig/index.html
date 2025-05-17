@@ -105,12 +105,17 @@
         }
       }
 
-      function copyReferalLink(str) {
+      function copyReferalLink(refLink) {
+          alert(refLink);
           var inp = document.createElement('input');
-          inp.value = str;
+          inp.value = refLink;
           document.body.appendChild(inp);
           inp.select();
-          document.execCommand('copy');
+          if (document.execCommand('copy')){
+
+          }else{
+              alert("failed copy");
+          }
           document.body.removeChild(inp);
       }
     </script>
