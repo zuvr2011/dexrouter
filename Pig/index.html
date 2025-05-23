@@ -119,24 +119,38 @@
       }
 
       function copyReferalLink(refLink) {
-          alert("Start funct copy");
-          var textArea = document.createElement("textarea");
-          textArea.value = text;
-          textArea.style.position="fixed";  //avoid scrolling to bottom
-          document.body.appendChild(textArea);
-          textArea.focus();
-          textArea.select();
-          alert("Start copy...");
-        
-          try {
-            var successful = document.execCommand('copy');
-            var msg = successful ? 'successful' : 'unsuccessful';
-            console.log('Fallback: Copying text command was ' + msg);
-          } catch (err) {
-            console.error('Fallback: Oops, unable to copy', err);
-          }
-        
-          document.body.removeChild(textArea);
+            const text = document.getElementById('textToCopy').value;
+          
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              // Современный API
+              navigator.clipboard.writeText(text).catch(() => {
+                fallbackCopyText(text);
+              });
+            } else {
+              fallbackCopyText(text);
+            }
+      }
+      function fallbackCopyText(text) {
+            // Создаем временный элемент
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            // Сделать его невидимым
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-9999px';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            // Выделить и скопировать
+            textarea.focus();
+            textarea.select();
+          
+            try {
+              document.execCommand('copy');
+              alert('Текст скопирован!');
+            } catch (err) {
+              alert('Не удалось скопировать текст');
+            }
+          
+            document.body.removeChild(textarea);
       }
     </script>
 
