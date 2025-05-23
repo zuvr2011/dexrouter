@@ -126,6 +126,8 @@
           textarea.style.top = "0";
           textarea.style.left = "-9999px";
           document.body.appendChild(textarea);
+          textArea.focus();
+          textArea.select();
           if (document.execCommand('copy')){
 
           }else{
