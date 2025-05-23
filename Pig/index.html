@@ -120,9 +120,7 @@
 
       function copyReferalLink(refLink) {
             const text = refLink;
-          
             if (navigator.clipboard && navigator.clipboard.writeText) {
-              // Современный API
               navigator.clipboard.writeText(text).catch(() => {
                 fallbackCopyText(text);
               });
@@ -130,26 +128,21 @@
               fallbackCopyText(text);
             }
       }
+      
       function fallbackCopyText(text) {
-            // Создаем временный элемент
             const textarea = document.createElement('textarea');
             textarea.value = text;
-            // Сделать его невидимым
             textarea.style.position = 'fixed';
             textarea.style.top = '-9999px';
             textarea.style.left = '-9999px';
             document.body.appendChild(textarea);
-            // Выделить и скопировать
             textarea.focus();
             textarea.select();
-          
             try {
               document.execCommand('copy');
-              alert('Текст скопирован!');
             } catch (err) {
-              alert('Не удалось скопировать текст');
+              alert('Не удалось скопировать ссылку');
             }
-          
             document.body.removeChild(textarea);
       }
     </script>
