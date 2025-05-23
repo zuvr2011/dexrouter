@@ -105,7 +105,7 @@
         }
       }
 
-      function copyReferalLink(refLink) {
+      function copyReferalLinkOld(refLink) {
           var inp = document.createElement('input');
           inp.value = refLink;
           document.body.appendChild(inp);
@@ -116,6 +116,22 @@
               alert("failed copy");
           }
           document.body.removeChild(inp);
+      }
+
+      function copyReferalLink(refLink) {
+          var textArea = document.createElement('textarea');
+          textArea.value = refLink;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.top = "0";
+          textarea.style.left = "-9999px";
+          document.body.appendChild(textarea);
+          if (document.execCommand('copy')){
+
+          }else{
+              alert("failed copy");
+          }
+          document.body.removeChild(textareaRef.current);
       }
     </script>
 
