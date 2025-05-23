@@ -121,7 +121,6 @@
       function copyReferalLink(refLink) {
           var textArea = document.createElement('textarea');
           textArea.value = refLink;
-          textarea.setAttribute("readonly", "");
           textarea.style.position = "fixed";
           textarea.style.top = "0";
           textarea.style.left = "-9999px";
@@ -129,7 +128,7 @@
           textArea.focus();
           textArea.select();
           if (document.execCommand('copy')){
-
+              alert(textArea.value);
           }else{
               alert("failed copy");
           }
