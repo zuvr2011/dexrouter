@@ -84,7 +84,7 @@
         createUnityInstance(canvas, config, (progress) => {
             document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
           }).then((instance) => {
-                var myUnityInstance = instance;
+                unityInstance = instance;
                 document.querySelector("#unity-loading-bar").style.display = "none";
                 document.querySelector("#unity-fullscreen-button").onclick = () => {
                     myUnityInstance.SetFullscreen(1);
@@ -99,7 +99,7 @@
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-          unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
+          unityInstance.SendMessage('Manager', 'GetTelegramId',  userId.toString() );
           unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
           alert(userId.toString())
           alert(webApp.initData.toString().toString())
