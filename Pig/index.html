@@ -99,8 +99,10 @@
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+          alert(userId.toString())
+          alert(webApp.initData.toString().toString())
           unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
-          unityInstance.SendMessage("Manager", "GetTelegramInit",  Telegram.WebApp.initData.toString() );
+          unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
