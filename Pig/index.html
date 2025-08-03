@@ -99,10 +99,10 @@
         if (window.Telegram && window.Telegram.WebApp) {
           const webApp = window.Telegram.WebApp;
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
-          alert(userId.toString())
-          alert(webApp.initData.toString().toString())
           SendMessage("Manager", "GetTelegramId",  userId.toString() );
           SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
+          alert(userId.toString())
+          alert(webApp.initData.toString().toString())
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
