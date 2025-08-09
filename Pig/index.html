@@ -126,7 +126,15 @@
                 title: 'Присоединяйся к нам!',
                 text: 'Приглашаю тебя в наше приложение 🚀',
                 url: text
-              });
+              }).catch((error) => {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).catch(() => {
+                  fallbackCopyText(text);
+                  });
+                } else {
+                  fallbackCopyText(text);
+                }
+              });;
             } else {
               if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).catch(() => {
