@@ -101,8 +101,6 @@
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
           unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
           unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
-          alert(userId.toString())
-          alert(webApp.initData.toString().toString())
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
