@@ -59,6 +59,7 @@
 
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        window.Telegram.WebApp.expand();
         window.Telegram.WebApp.requestFullscreen();
         var meta = document.createElement('meta');
         meta.name = 'viewport';
