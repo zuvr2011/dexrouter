@@ -129,7 +129,7 @@
                 url: text
               }).catch((error) => {
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).catch(() => {
+                navigator.clipboard.writeText('Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!\n'+text).catch(() => {
                   fallbackCopyText(text);
                   });
                 } else {
