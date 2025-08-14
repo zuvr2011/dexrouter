@@ -62,7 +62,7 @@
 
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        if (window.Telegram.WebApp.requestFullscreen().isAvailable()){
+        try {
           window.Telegram.WebApp.requestFullscreen();
         }
         var meta = document.createElement('meta');
