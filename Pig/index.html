@@ -136,9 +136,10 @@
 
             if (isMobile){
               if (navigator.share) {
+                const refUrldText = commText+text;
                 await navigator.share({
                   title: 'Присоединяйся к нам!',
-                  text: commText+text
+                  text: refUrldText
                 }).catch((error) => {
                 });
               }
