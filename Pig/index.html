@@ -139,7 +139,8 @@
                 const refUrldText = commText+text;
                 await navigator.share({
                   title: 'Присоединяйся к нам!',
-                  text: refUrldText
+                  text: commText,
+                  url: text
                 }).catch((error) => {
                 });
               }
