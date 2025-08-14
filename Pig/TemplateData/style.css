@@ -16,7 +16,7 @@ body { padding: 0; margin: 0 }
 #unity-warning { position: absolute; left: 50%; top: 5%; transform: translate(-50%); background: white; padding: 10px; display: none }
 
 @font-face {
-  font-family: 'Lack';
-  src: url('Lack.ttf') format('ttf'),url('Lack.ttf') format('ttf');
-  font-weight: normal;
+  font-family: 'lack';
+  src: url('lack.otf') format('opentype'),url('lack.otf') format('opentype');
+  font-weight: regular;
 }
