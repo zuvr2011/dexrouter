@@ -121,29 +121,26 @@
       }
 
       async function shareReferralLink(refLink) {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             const commText = 'Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!\n';
             const text = refLink;
-            if (navigator.share) {
-              await navigator.share({
-                title: 'Присоединяйся к нам!',
-                text: 'Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!',
-                url: text
-              }).catch((error) => {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(commText+text).catch(() => {
-                  fallbackCopyText(commText+text);
-                  });
-                } else {
-                  fallbackCopyText(commText+text);
-                }
-              });;
-            } else {
-              if (navigator.clipboard && navigator.clipboard.writeText) {
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(commText+text).catch(() => {
                   fallbackCopyText(commText+text);
                 });
-              } else {
+            } else {
                 fallbackCopyText(commText+text);
+            }
+
+            if (isMobile){
+              if (navigator.share) {
+                await navigator.share({
+                  title: 'Присоединяйся к нам!',
+                  text: 'Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!',
+                  url: text
+                }).catch((error) => {
+                });
               }
             }
       }
