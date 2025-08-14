@@ -138,8 +138,7 @@
               if (navigator.share) {
                 await navigator.share({
                   title: 'Присоединяйся к нам!',
-                  text: 'Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!',
-                  url: text
+                  text: commText+text
                 }).catch((error) => {
                 });
               }
