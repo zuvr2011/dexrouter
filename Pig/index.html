@@ -90,10 +90,7 @@
         };
       document.body.appendChild(script);
       
-        window.Telegram.WebApp.expand();
-        if (window.Telegram.WebApp.requestFullscreen.isAvailable()){
-        window.Telegram.WebApp.requestFullscreen();
-        }
+        
       function progressFloatToInt(progr){
         var a = Math.floor(progr);
         if (a>94) a = 94;
@@ -163,6 +160,11 @@
               alert('Не удалось скопировать ссылку');
             }
             document.body.removeChild(textarea);
+      }
+
+      window.Telegram.WebApp.expand();
+      if (window.Telegram.WebApp.requestFullscreen.isAvailable()){
+        window.Telegram.WebApp.requestFullscreen();
       }
     </script>
   </body>
