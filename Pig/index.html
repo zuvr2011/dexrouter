@@ -161,10 +161,10 @@
             }
             document.body.removeChild(textarea);
       }
-
-      window.Telegram.WebApp.expand();
-      window.Telegram.WebApp.requestFullscreen();
-      
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        window.Telegram.WebApp.expand();
+        window.Telegram.WebApp.requestFullscreen();
+      }
     </script>
   </body>
 </html>
