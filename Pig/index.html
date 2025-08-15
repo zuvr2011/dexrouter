@@ -14,10 +14,11 @@
       <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%; background: url('./TemplateData/bg.png'); background-attachment: fixed; background-size: auto 100%;background-position: center center;" ></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo">
-          <h1  id="progressText" style="color:white; font-size: 36px;">0%</h1>
+          <h1  id="progressText" style="color:white; font-size: 41px;text-shadow: 1px 1px 2px #333333;">0%</h1>
         </div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
+          <p  id="text" style="line-height: 1;font-family:'lack';color:white; font-size: 24px;display: flex; justify-content: center;text-align: center;  align-items: center;text-shadow: 1px 1px 2px #333333;">Высаживаемся<br>на остров...</p>
         </div>
       </div>
       <div id="unity-warning"> </div>
@@ -89,8 +90,8 @@
             });
         };
       document.body.appendChild(script);
-      
-        
+
+
       function progressFloatToInt(progr){
         var a = Math.floor(progr);
         if (a>94) a = 94;
@@ -123,7 +124,7 @@
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             const commText = 'Собирай предметы для выживания в игре — забирай призы в реальной жизни. Присоединяйся к битве на острове «Наследников»!\n';
             const text = refLink;
-            
+
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(commText+text).catch(() => {
                   fallbackCopyText(commText+text);
