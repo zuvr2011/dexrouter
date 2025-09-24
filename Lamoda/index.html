@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Pig</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+
+  <body style="background-color:black;">
+    <div id="unity-container" style="position: absolute; width: 100%; height: 100%">
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%; background: url('./TemplateData/bg.png'); background-attachment: fixed; background-size: auto 100%;background-position: center center;" ></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo">
+          <h1  id="progressText" style="color:white; font-size: 41px;text-shadow: 1px 1px 2px #333333;">0%</h1>
+        </div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+          <p  id="text" style="line-height: 1;font-family:'lack';color:white; font-size: 18px;display: flex; justify-content: center;text-align: center;  align-items: center;text-shadow: 1px 1px 2px #333333;">Загружаем...<br> </p>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+    </div>
+
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/FinalBuild.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/FinalBuild.data",
+        frameworkUrl: buildUrl + "/FinalBuild.framework.js",
+        codeUrl: buildUrl + "/FinalBuild.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Maracoon",
+        productName: "PlayGame",
+        productVersion: "1",
+        showBanner: unityShowBanner,
+        devicePixelRatio: 3,
+      };
+
+
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
+      } else {
+        canvas.style.width = window.innerHeight;
+        canvas.style.height = window.innerHeight;
+      }
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+            document.querySelector("#unity-progress-bar-full").style.width = progressFloatToInt(100 * progress) + "%";
+            document.querySelector("#progressText").textContent  = progressFloatToInt(100 * progress) + "%";
+          }).then((instance) => {
+                unityInstance = instance;
+                document.querySelector("#unity-loading-bar").style.display = "none";
+            }).catch((message) => {
+                  window.location.reload(true);
+                  //alert(message);
+            });
+        };
+      document.body.appendChild(script);
+
+
+      function progressFloatToInt(progr){
+        var a = Math.floor(progr);
+        if (a>94) a = 94;
+        return a;
+      }
+
+      function getTelegramUser() {
+        if (window.Telegram && window.Telegram.WebApp) {
+          const webApp = window.Telegram.WebApp;
+          const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+          unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
+          unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
+        }else{
+          alert("Нет объекта Telegram.WebApp")
+        }
+      }
+
+      function copyReferalLink(refLink) {
+            const text = refLink;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).catch(() => {
+                fallbackCopyText(text);
+              });
+            } else {
+              fallbackCopyText(text);
+            }
+      }
+
+      async function shareReferralLink(refLink) {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const commText = 'Помоги мне выиграть и залетай на остров Наследников!\nТут огромный чемодан сметает всё на своем пути!\n';
+            const text = refLink;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(commText+text).catch(() => {
+                  fallbackCopyText(commText+text);
+                });
+            } else {
+                fallbackCopyText(commText+text);
+            }
+
+            if (isMobile){
+              if (navigator.share) {
+                const refUrldText = commText+text;
+                await navigator.share({
+                  title: 'Присоединяйся к нам!',
+                  text: refUrldText
+                }).catch((error) => {
+                });
+              }
+            }
+      }
+
+      function fallbackCopyText(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-9999px';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+              document.execCommand('copy');
+            } catch (err) {
+              alert('Не удалось скопировать ссылку');
+            }
+            document.body.removeChild(textarea);
+      }
+
+      function goToPage(route) {
+        window.parent.postMessage({ type: 'unity-navigate', route }, '*');
+      }
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        window.Telegram.WebApp.expand();
+        window.Telegram.WebApp.requestFullscreen();
+      }
+    </script>
+  </body>
+</html>
