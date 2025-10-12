@@ -113,9 +113,9 @@
 
       function getPlatform(){
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          unityInstance.SendMessage("Manager", "SetIsMobile");
+          unityInstance.SendMessage("Graphic", "SetIsMobile");
         }else{
-          unityInstance.SendMessage("Manager", "SetNotMobile");
+          unityInstance.SendMessage("Graphic", "SetNotMobile");
         }
       }
 
