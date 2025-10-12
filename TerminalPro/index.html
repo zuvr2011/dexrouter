@@ -11,7 +11,7 @@
 
   <body style="background-color:black;">
     <div id="unity-container" style="position: absolute; width: 100%; height: 100%">
-      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%; background: url('https://res.cloudinary.com/dwib7ec5p/image/upload/v1759760552/bg_bqgduf.png'); background-attachment: fixed; background-size: auto 100%;background-position: center center;" ></canvas>
+      <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} style="width: 100%; height: 100%; background: url('./TemplateData/bg.png'); background-attachment: fixed; background-size: auto 100%;background-position: center center;" ></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo">
           <h1  id="progressText" style="color:white; font-size: 41px;text-shadow: 1px 1px 2px #333333;">0%</h1>
@@ -108,6 +108,14 @@
           unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
         }else{
           alert("Нет объекта Telegram.WebApp")
+        }
+      }
+
+      function getPlatform(){
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          unityInstance.SendMessage("Manager", "SetIsMobile");
+        }else{
+          unityInstance.SendMessage("Manager", "SetNotMobile");
         }
       }
 
