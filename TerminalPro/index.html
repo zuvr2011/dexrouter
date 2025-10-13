@@ -112,10 +112,23 @@
       }
 
       function getPlatform(){
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          unityInstance.SendMessage("Graphic", "SetIsMobile");
+        if (window.Telegram && window.Telegram.WebApp) {
+            const webApp = window.Telegram.WebApp;
+            const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
+            //unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
+            //unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
+
+          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            unityInstance.SendMessage("Graphic", "SetIsMobile", webApp.initDataUnsafe?.user?.username.toString());
+          }else{
+            unityInstance.SendMessage("Graphic", "SetNotMobile", webApp.initDataUnsafe?.user?.username.toString());
+          }
         }else{
-          unityInstance.SendMessage("Graphic", "SetNotMobile");
+          if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            unityInstance.SendMessage("Graphic", "SetIsMobile", "none");
+          }else{
+            unityInstance.SendMessage("Graphic", "SetNotMobile", "none");
+          }
         }
       }
 
