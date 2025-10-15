@@ -18,7 +18,7 @@
         </div>
         <div id="unity-progress-bar-empty">
           <div id="unity-progress-bar-full"></div>
-          <p  id="text" style="line-height: 1;font-family:'lack';color:white; font-size: 18px;display: flex; justify-content: center;text-align: center;  align-items: center;text-shadow: 1px 1px 2px #333333;">Загружаем...<br> </p>
+          <p  id="text" style="line-height: 1;font-family:'lack';color:white; font-size: 18px;display: flex; justify-content: center;text-align: center;  align-items: center;text-shadow: 1px 1px 1px #333333;">Готовим корт...<br> </p>
         </div>
       </div>
       <div id="unity-warning"> </div>
@@ -55,7 +55,7 @@
         codeUrl: buildUrl + "/FinalBuild.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Maracoon",
-        productName: "Vizhivaliti",
+        productName: "PlayGame",
         productVersion: "1",
         showBanner: unityShowBanner,
       };
@@ -104,10 +104,15 @@
           const webApp = window.Telegram.WebApp;
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
           unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
-          unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
+          //unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
+      }
+
+      function doVibrate(){
+        const webApp = window.Telegram.WebApp;
+        webApp.HapticFeedback.impactOccurred('soft');
       }
 
       function copyReferalLink(refLink) {
@@ -171,6 +176,8 @@
         window.Telegram.WebApp.expand();
         window.Telegram.WebApp.requestFullscreen();
       }
+
+
     </script>
   </body>
 </html>
