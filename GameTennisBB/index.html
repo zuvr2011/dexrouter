@@ -104,7 +104,7 @@
           const webApp = window.Telegram.WebApp;
           const userId = webApp.initDataUnsafe?.user?.id || 'Не удалось получить ID';
           unityInstance.SendMessage("Manager", "GetTelegramId",  userId.toString() );
-          unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
+          //unityInstance.SendMessage("Manager", "GetTelegramInit",  webApp.initData.toString() );
         }else{
           alert("Нет объекта Telegram.WebApp")
         }
@@ -176,6 +176,12 @@
         window.Telegram.WebApp.expand();
         window.Telegram.WebApp.requestFullscreen();
       }
+
+      window.onbeforeunload = () => {
+        unityInstance.SendMessage("Manager", "Log", "miniapp_close" );
+        alert('Hey this close log');
+      }
+
     </script>
   </body>
 </html>
