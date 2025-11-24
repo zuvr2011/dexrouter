@@ -210,7 +210,14 @@
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         window.Telegram.WebApp.expand();
         window.Telegram.WebApp.requestFullscreen();
-        window.Telegram.WebApp.lockOrientation("portrait");
+
+        var lockFunction =  window.screen.orientation.lock;
+        if (lockFunction.call(window.screen.orientation, 'portrait')) {
+           console.log('Orientation locked')
+        } else {
+            console.error('There was a problem in locking the orientation')
+        }
+        //window.Telegram.WebApp.lockOrientation("portrait");
       }
 
     </script>
