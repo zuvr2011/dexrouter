@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+
+
+
+<title>Переубедите Домового</title>
+
+
+
+    <!-- TemplateData с CDN -->
+  <link rel="icon" href="./TemplateData/favicon.ico" />
+
+  <!-- Вариант B: CSS не блокирует рендер
+  <link rel="preload" as="style" crossorigin
+        href="./TemplateData/style.css" />
+      ./TemplateData/style.css
+    -->
+  <link rel="preload" as="style" crossorigin
+        href="./TemplateData/style.css" />
+
+  <link rel="stylesheet"
+        href="./TemplateData/style.css"
+        media="print" onload="this.media='all'">
+
+  <noscript>
+    <link rel="stylesheet" href="./TemplateData/style.css">
+  </noscript>
+
+  <!-- Preload ТОЛЬКО loader.js (остальное НЕ preload — чтобы Lighthouse меньше ругался на unused JS) -->
+  <link rel="preload" as="script" crossorigin
+        href="./Build/FinalBuild.loader.js" />
+
+   <style>
+    /* Минимальные критические стили, чтобы не мигало до CSS */
+    html, body { height: 100%; margin: 0;  font-family:'lack';}
+    #unity-container { position: fixed; inset: 0; }
+    #unity-canvas { width: 100%; height: 100%; display: block; }
+    #unity-loading-bar { position: absolute; inset: 0; display: grid; place-items: center; }
+    #progressText {
+      font-size: clamp(48px, 8vw, 100px);
+      -webkit-text-stroke: 2px #333333;
+      background: linear-gradient(-45deg,
+        #19AA51 43.3%,
+        #40A8E4 43.3% 56.6%,
+        #27C164 56.6% 83%,
+        #BCEA8E 83.3%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0;
+    }
+
+    #unity-warning { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 10; }
+    .banner { padding: 10px 12px; border-radius: 10px; margin-top: 8px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .banner.warn { background: #fff3cd; color: #664d03; }
+    .banner.err  { background: #f8d7da; color: #842029; }
+    .retry { margin-left: 10px; padding: 6px 10px; border: 0; border-radius: 8px; cursor: pointer; }
+    /* фиксируем контейнер, чтобы unity-desktop transform не влиял */
+    #unity-container{
+      position: fixed !important;
+      inset: 0 !important;
+      left: 0 !important;
+      top: 0 !important;
+      transform: none !important;
+    }
+    /* Лоадер всегда как ты хочешь: на весь экран и по центру */
+    #unity-loading-bar{
+      position: absolute !important;
+      inset: 0 !important;
+      place-items: center !important;
+      transform: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- GTM noscript можно оставить, но он тоже влияет на first load.
+       Если готовы пожертвовать частью метрик у пользователей без JS — уберите. -->
+
+
+
+  <div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+
+    <div id="unity-loading-bar" aria-label="Loading">
+      <h1 id="progressText"> </h1>
+    </div>
+
+    <div id="unity-warning" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+  (() => {
+    const BASE_URL = window.__BASE_URL__;
+    const buildUrl  = "./Build";
+    const loaderUrl = buildUrl + "./FinalBuild.loader.js";
+
+    const canvas = document.getElementById("unity-canvas");
+    const loadingBar = document.getElementById("unity-loading-bar");
+    const progressText = document.getElementById("progressText");
+    const warningBanner = document.getElementById("unity-warning");
+
+    function unityShowBanner(msg, type) {
+      const div = document.createElement("div");
+      div.className = "banner " + (type === "error" ? "err" : "warn");
+      div.textContent = msg;
+
+      // Для ошибки — добавим кнопку повтора
+      if (type === "error") {
+        const btn = document.createElement("button");
+        btn.className = "retry";
+        btn.textContent = "Повторить";
+        btn.onclick = () => location.reload();
+        div.appendChild(btn);
+      } else {
+        setTimeout(() => div.remove(), 5000);
+      }
+
+      warningBanner.appendChild(div);
+    }
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      // Unity советует такие параметры для мобилок
+      document.documentElement.style.height = "100%";
+    }
+
+    const config = {
+      arguments: [],
+      dataUrl: buildUrl + "/FinalBuild.data",
+      frameworkUrl: buildUrl + "/FinalBuild.framework.js",
+      codeUrl: buildUrl + "/FinalBuild.wasm",
+      streamingAssetsUrl: BASE_URL + "/StreamingAssets",
+      companyName: "Maracoon",
+      productName: "PlayGame",
+      productVersion: "1",
+      showBanner: unityShowBanner,
+      // matchWebGLToCanvasSize: true, // можно включить, если у вас Unity 2021+
+      // devicePixelRatio: 1, // иногда помогает на слабых мобилках
+    };
+
+    function progressFloatToInt(p) {
+      const a = Math.floor(p);
+      return a > 94 ? 94 : a; // ваш хак, оставил как есть
+    }
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.crossOrigin = "anonymous";
+        s.onload = resolve;
+        s.onerror = reject;
+        document.body.appendChild(s);
+      });
+    }
+
+    async function boot() {
+      loadingBar.style.display = "grid";
+
+      try {
+        await loadScript(loaderUrl);
+
+        const unityInstance = await createUnityInstance(canvas, config, (progress) => {
+          renderPngNumbers( progressFloatToInt(100 * progress) +"", 'progressText');
+          //progressText.textContent = progressFloatToInt(100 * progress) + "%";
+        });
+
+        loadingBar.style.display = "none";
+        window.unityInstance = unityInstance;
+        window.__UNITY_INSTANCE__ = unityInstance;
+
+        // если userId уже готов — отправим сразу
+        if (window.__TRY_PUSH_USERID__) window.__TRY_PUSH_USERID__();
+
+        // на всякий случай повторим несколько раз (если Manager/SetUserId ещё не готов)
+        let tries = 0;
+        const t = setInterval(() => {
+          tries++;
+          if (window.__TRY_PUSH_USERID__) window.__TRY_PUSH_USERID__();
+          if (tries >= 10) clearInterval(t); // ~5 сек если интервал 500мс
+        }, 500);
+
+
+        // Если нужно отправить тип устройства внутрь Unity:
+        // (лучше делать после полной инициализации)
+        try {
+          //unityInstance.SendMessage("Manager", "SetDeviceType", isMobile ? 1 : 0);
+        } catch (e) {}
+      } catch (e) {
+        unityShowBanner("Не удалось загрузить игру. Проверьте сеть или попробуйте ещё раз.", "error");
+        console.error(e);
+      }
+    }
+
+    boot();
+  })();
+
+  function getDeviceType() {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    unityInstance.SendMessage("Manager", "SetDeviceType",  isMobile?1:0 );
+  }
+
+  function getUserId() {
+      unityInstance.SendMessage("Manager", "SetUserId", "test_test_test");
+  }
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  let isFontLoaded = false;
+  const digitAssets = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'percent'];
+  const cachedImages = [];
+  initFontPreload('digits/');
+
+  function initFontPreload(path = 'digits/') {
+      const promises = digitAssets.map(name => {
+          return new Promise((resolve) => {
+              const img = new Image();
+              img.src = `${path}${name}.png`;
+              img.onload = () => {
+                  cachedImages.push(img);
+                  resolve();
+              };
+              img.onerror = () => {
+                  console.error(`Не удалось загрузить: ${name}.png`);
+                  resolve(); // Резолвим в любом случае, чтобы не вешать скрипт
+              };
+          });
+      });
+
+      return Promise.all(promises).then(() => {
+          isFontLoaded = true; // Устанавливаем переменную в true
+          console.log('Шрифт готов к работе');
+      });
+  }
+
+
+  function renderPngNumbers(value, containerId, size = 76) {
+      // Если картинки еще не загружены, выходим или рисуем обычный текст
+      if (!isFontLoaded) {
+          document.getElementById(containerId).innerText = "";
+          return;
+      }
+
+      const container = document.getElementById(containerId);
+      const digits = value.toString().split('');
+      container.innerHTML = '';
+      container.style.display = 'flex';
+      container.style.alignItems = 'baseline';
+
+      const addImg = (name) => {
+          const img = document.createElement('img');
+          img.src = `digits/${name}.png`;
+          img.style.height = `${size}px`;
+          container.appendChild(img);
+      };
+
+      digits.forEach(d => { if(/\d/.test(d)) addImg(d); });
+      addImg('percent');
+  }
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////
+
+  </script>
+</body>
+</html>
