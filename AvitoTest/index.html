@@ -214,57 +214,9 @@
   ////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////
-  let isFontLoaded = false;
-  const digitAssets = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'percent'];
-  const cachedImages = [];
-  initFontPreload('digits/');
-
-  function initFontPreload(path = 'digits/') {
-      const promises = digitAssets.map(name => {
-          return new Promise((resolve) => {
-              const img = new Image();
-              img.src = `${path}${name}.png`;
-              img.onload = () => {
-                  cachedImages.push(img);
-                  resolve();
-              };
-              img.onerror = () => {
-                  console.error(`Не удалось загрузить: ${name}.png`);
-                  resolve(); // Резолвим в любом случае, чтобы не вешать скрипт
-              };
-          });
-      });
-
-      return Promise.all(promises).then(() => {
-          isFontLoaded = true; // Устанавливаем переменную в true
-          console.log('Шрифт готов к работе');
-      });
-  }
 
 
-  function renderPngNumbers(value, containerId, size = 76) {
-      // Если картинки еще не загружены, выходим или рисуем обычный текст
-      if (!isFontLoaded) {
-          document.getElementById(containerId).innerText = "";
-          return;
-      }
 
-      const container = document.getElementById(containerId);
-      const digits = value.toString().split('');
-      container.innerHTML = '';
-      container.style.display = 'flex';
-      container.style.alignItems = 'baseline';
-
-      const addImg = (name) => {
-          const img = document.createElement('img');
-          img.src = `digits/${name}.png`;
-          img.style.height = `${size}px`;
-          container.appendChild(img);
-      };
-
-      digits.forEach(d => { if(/\d/.test(d)) addImg(d); });
-      addImg('percent');
-  }
   ////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////
