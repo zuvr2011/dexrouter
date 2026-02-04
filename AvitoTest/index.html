@@ -169,8 +169,8 @@
         await loadScript(loaderUrl);
 
         const unityInstance = await createUnityInstance(canvas, config, (progress) => {
-          renderPngNumbers( progressFloatToInt(100 * progress) +"", 'progressText');
-          //progressText.textContent = progressFloatToInt(100 * progress) + "%";
+          //renderPngNumbers( progressFloatToInt(100 * progress) +"", 'progressText');
+          progressText.textContent = progressFloatToInt(100 * progress) + "%";
         });
 
         loadingBar.style.display = "none";
